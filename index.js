@@ -18,7 +18,7 @@ module.exports = (robot, _, Settings = require('./lib/settings')) => {
           owner: context.repo().owner,
           repo: context.repo().repo,
           name: "Settings Probot",
-          head_sha: "e0062f3b8d73d93c247312131a37df7809d1454a",
+          head_sha: payload.after,
           status: "completed",
           conclusion: "success"
         })
