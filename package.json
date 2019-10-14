@@ -6,15 +6,17 @@
   "main": "index.js",
   "scripts": {
     "start": "probot run ./index.js",
+    "hook": "probot receive -e push -p ./test.json ./index.js",
     "test": "jest && standard",
     "test:watch": "jest --watch"
   },
   "author": "Brandon Keepers",
   "license": "ISC",
   "dependencies": {
-    "deepmerge": "^4.1.0",
+    "deepmerge": "^2.2.1",
     "js-yaml": "^3.12.0",
-    "probot": "^9.5.0"
+    "probot": "^7.4.0",
+    "probot-config": "^1.0.0"
   },
   "devDependencies": {
     "jest": "^22.4.4",
@@ -27,8 +29,8 @@
     ]
   },
   "engines": {
-    "node": ">= 10.16.3",
-    "npm": ">= 6.9.0"
+    "node": ">= 8.3.0",
+    "npm": ">= 5.3.0"
   },
   "jest": {
     "testEnvironment": "node"

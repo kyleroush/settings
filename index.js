@@ -41,6 +41,7 @@ There was an error while updating the settings.
       }).then(() => {
         context.github.checks.create(checkOptions)
           .catch((err) => {
+            // Incase the check api has not been authorized 
             console.error(err)
           })
       })
