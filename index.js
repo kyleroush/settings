@@ -6,6 +6,13 @@ module.exports = (robot, _, Settings = require('./lib/settings')) => {
     const defaultBranch = payload.ref === 'refs/heads/' + payload.repository.default_branch
 
     const config = await context.config('settings.yml', {}, { arrayMerge: mergeArrayByName })
+    const checkOptions = {
+      owner: context.repo().owner,
+      repo: context.repo().repo,
+      name: "Settings Probot",
+      head_sha: payload.after,
+      status: "completed"
+    }
 
     const settingsModified = payload.commits.find(commit => {
       return commit.added.includes(Settings.FILE_NAME) ||
@@ -13,38 +20,29 @@ module.exports = (robot, _, Settings = require('./lib/settings')) => {
     })
 
     if (defaultBranch && settingsModified) {
-      return Settings.sync(context.github, context.repo(), config).then(() => {
-        context.github.checks.create({
-          owner: context.repo().owner,
-          repo: context.repo().repo,
-          name: "Settings Probot",
-          head_sha: payload.after,
-          status: "completed",
-          conclusion: "success"
-        })
-      }).catch(res => {
-  
-        const summary = `
-  There was an error while updating the settings.
-  
-  <details><summary>Failed response</summary>
+      return Settings.sync(context.github, context.repo(), config)
+        .then(() => {
+          checkOptions.conclusion = "success"
+        }).catch(res => {
+          checkOptions.conclusion = "failure"
+          const summary = `
+There was an error while updating the settings.
+
+<details><summary>Failed response</summary>
   <pre>
   ${JSON.stringify(JSON.parse(res.message), null, 2)}
   </pre>
-  </details>
+</details>
 `
-        context.github.checks.create({
-          owner: context.repo().owner,
-          repo: context.repo().repo,
-          name: "Settings Probot",
-          head_sha: payload.after,
-          status: "completed",
-          conclusion: "failure",
-          output: {
+          checkOptions.output = {
             title: "Settings Probot",
             summary: summary
           }
-        })    
+      }).then(() => {
+        context.github.checks.create(checkOptions)
+          .catch((err) => {
+            console.error(err)
+          })
       })
     }
   })
