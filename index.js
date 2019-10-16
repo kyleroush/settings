@@ -9,9 +9,9 @@ module.exports = (robot, _, Settings = require('./lib/settings')) => {
     const checkOptions = {
       owner: context.repo().owner,
       repo: context.repo().repo,
-      name: "Settings",
+      name: 'Settings',
       head_sha: payload.after,
-      status: "completed"
+      status: 'completed'
     }
 
     const settingsModified = payload.commits.find(commit => {
@@ -22,9 +22,9 @@ module.exports = (robot, _, Settings = require('./lib/settings')) => {
     if (defaultBranch && settingsModified) {
       return Settings.sync(context.github, context.repo(), config)
         .then(() => {
-          checkOptions.conclusion = "success"
+          checkOptions.conclusion = 'success'
         }).catch(res => {
-          checkOptions.conclusion = "failure"
+          checkOptions.conclusion = 'failure'
           const summary = `
 There was an error while updating the repository settings.
 
@@ -35,16 +35,16 @@ There was an error while updating the repository settings.
 </details>
 `
           checkOptions.output = {
-            title: "Settings Probot",
+            title: 'Settings Probot',
             summary: summary
           }
-      }).then(() => {
-        context.github.checks.create(checkOptions)
-          .catch((err) => {
-            // Incase the check api has not been authorized 
-            console.error(err)
-          })
-      })
+        }).then(() => {
+          context.github.checks.create(checkOptions)
+            .catch((err) => {
+            // Incase the check api has not been authorized
+              console.error(err)
+            })
+        })
     }
   })
 }
