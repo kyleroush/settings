@@ -26,7 +26,7 @@ module.exports = (robot, _, Settings = require('./lib/settings')) => {
         }).catch(res => {
           checkOptions.conclusion = "failure"
           const summary = `
-There was an error while updating the settings.
+There was an error while updating the repository settings.
 
 <details><summary>Failed response</summary>
   <pre>
