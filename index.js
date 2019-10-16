@@ -9,7 +9,7 @@ module.exports = (robot, _, Settings = require('./lib/settings')) => {
     const checkOptions = {
       owner: context.repo().owner,
       repo: context.repo().repo,
-      name: "Settings Probot",
+      name: "Settings",
       head_sha: payload.after,
       status: "completed"
     }
